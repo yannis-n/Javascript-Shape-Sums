@@ -1,12 +1,12 @@
 import { circleAndMouseCollissionDetection, createPolygon, pointInsidePolygon } from "../src/helper.js";
 
 export default class Point {
-  constructor(game, position, centeredPosition) {
+  constructor(game, unit, position) {
 
     this.game = game;
 
     this.position = position;    
-    this.centeredPosition = centeredPosition;
+    this.unit = unit
   }
 
   
@@ -18,8 +18,8 @@ export default class Point {
 
   draw(ctx) {
     ctx.beginPath() // begin drawing
-    ctx.arc(this.position.x, this.position.y, 4, 0, 2 * Math.PI, false) // specify that it's an arc
-    ctx.fillStyle = 'red';
+    ctx.arc(this.position.x, this.position.y, this.unit.pointsRadius - this.unit.pointPadding, 0, 2 * Math.PI, false) // specify that it's an arc
+    ctx.fillStyle = '#fff';
 
     ctx.fill() // fill it in
   

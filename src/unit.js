@@ -1,4 +1,4 @@
-import { circleAndMouseCollissionDetection, createPolygon, pointInsidePolygon, drawPolygon, circleInsidePolygon } from "../src/helper.js";
+import { circleAndMouseCollissionDetection, createPolygon, pointInsidePolygon, pointsColliding, drawPolygon, circleInsidePolygon } from "../src/helper.js";
 import Point from "./point.js";
 
 export default class Unit {
@@ -8,6 +8,7 @@ export default class Unit {
     this.dots = dots;
     this.pointsRadius = 5;
     this.position = position;
+    this.clicked = false;
 
     this.radius = game.unitMeasurement.radius
     this.sides = game.currentDimensions;
@@ -26,34 +27,54 @@ export default class Unit {
     this.apothem = this.radius * Math.cos(Math.PI/this.sides)
     this.sideWidth = 2 * this.apothem * Math.tan(Math.PI/this.sides)
     this.outerAngle = 2 * Math.PI / this.sides
-    this.path = createPolygon(this.position.x, this.position.y, this.radius, this.sides , this.rotateAngle)
-    console.log(this.path)
-    this.polygonHeight = Math.abs(this.path[0][1] - this.path[this.sides - 1][1])
-    // Assign the designated Points for the Unit
 
+    let pathX = this.position.x
+    if (game.centeredXMod > 0){
+      pathX -= game.centeredXMod
+    }
+
+    // this is where the polygon's point are saved should we need to test the unit against some positional statement
+    this.path = createPolygon(pathX, this.position.y, this.radius, this.sides , this.rotateAngle)
+    this.polygonHeight = Math.abs(this.path[0][1] - this.path[this.sides - 1][1])
+
+    // Assign the designated Points for the Unit
+    this.pointPadding = 1
   
+    // In order to make sure that the point within the unit are always contained we assign a perimeter,
+    // smaller than the actual size of the polygon as the area available for point population
+    let pointPerimenets = JSON.parse(JSON.stringify(this.path))
+
+    this.pointPerimenets = pointPerimenets.map(item => {
+      if (item[1] < this.position.y) {
+        item[1] += this.pointsRadius * 2
+      }else if (item[1] > this.position.y){
+        item[1] -= this.pointsRadius * 2
+      }      
+      if (item[0] < this.position.y) {
+        item[0] += this.pointsRadius * 2
+      }else if (item[0] > this.position.y){
+        item[0] -= this.pointsRadius * 2
+      };
+      return item
+    })
+
     this.points = []
 
-    for (var i = 0; i < dots; i++) {
+    for (let i = 0; i < dots; i++) {
       do{
         var plusOrMinusX = Math.random() < 0.5 ? -1 : 1;
         var plusOrMinusY = Math.random() < 0.5 ? -1 : 1;
-        var x = plusOrMinusX * Math.floor(Math.round(Math.random()*2) * this.radius/this.pointsRadius);
-        var y = plusOrMinusY * Math.floor(Math.round(Math.random()*2) * this.radius/this.pointsRadius);
-        console.log(this.position.y + y)
+        var x = plusOrMinusX * Math.floor(Math.round(Math.random()) * this.radius/this.pointsRadius);
+        var y = plusOrMinusY * Math.floor(Math.round(Math.random()) * this.radius/this.pointsRadius);
         
-        // console.log( (this.polygonHeight - this.pointsRadius) / 2)
-      // } while(!circleInsidePolygon([this.position.x + x, this.position.y + y],this.path , this.pointsRadius))
-      } while(y > (this.polygonHeight - this.pointsRadius) / 2)
-      
-      this.points.push(new Point(game, {x: this.position.x +  x, y:this.position.y + y}, {x: this.position.x + x, y: this.position.y + y}))
-
+        var statement2 = pointsColliding([this.position.x + x, this.position.y + y], this.points)
+        // var statement1 = !pointInsidePolygon([this.position.x + x, this.position.y + y],this.pointPerimenets)
+      } while(statement2)
+      this.points.push(new Point(game, this, {x: this.position.x +  x, y:this.position.y + y}))
       }
   }
 
-  randomPoints(ctx, count, color){
-   
-  }
+
 
   // draw the unit circle with different border widths
   changeXCenter(dx){
@@ -71,25 +92,21 @@ export default class Unit {
     let pathRadius = this.pathRadius   
     // draw the unit perimeter
     drawPolygon(ctx, this.position.x, this.position.y, this.radius, this.sides , this.rotateAngle)
-        if (pointInsidePolygon([this.game.clicked.x, this.game.clicked.y],this.path)){
-          ctx.fillStyle = "rgba(255,114,2,1)";
+    if (this.clicked){
+      if (!this.game.wrongAnswer){
+        ctx.fillStyle = "rgba(35,224,27,1)";
+      }else{
+        ctx.fillStyle = "rgba(224,26,20,1)";
 
-        }else{
-          ctx.fillStyle = "rgba(0,114,227,1)";
+      }
 
-        }
-        ctx.fill()
-      ctx.closePath();
+    }else{
+      ctx.fillStyle = "rgba(0,114,227,1)";
 
-
-  
+    }
+    ctx.fill()
+    ctx.closePath();
     
-
-
-    
-
-    
-    // ctx.beginPath();
     ctx.restore();               // Restore original state
 
     [...this.points].forEach((object) => {

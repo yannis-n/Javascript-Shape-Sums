@@ -1,7 +1,7 @@
 import InputHandler from "../src/input.js";
 import { drawBoard } from "./boardBuilder.js";
 import { createMenu } from "../src/helperScreens.js";
-import { createHiDPICanvas, circleAndMouseCollissionDetection, shuffle  } from "../src/helper.js";
+import { createHiDPICanvas, circleAndMouseCollissionDetection, shuffle, pointInsidePolygon  } from "../src/helper.js";
 
 
 const GAMESTATE = {
@@ -12,6 +12,7 @@ const GAMESTATE = {
   NEWLEVEL: 4,
   LEVELDONE: 5,
   LOADING: 6,
+  ASSESSINGLEVEL: 7,
 };
 
 const unitMeasurement = {
@@ -55,8 +56,11 @@ const shapeSums = [
 
 export default class ShapeSums {
   constructor(gameWidth, gameHeight, difficulty, canvas) {
+    this.counter = 0;
     this.canvas = canvas
     this.rect = canvas.getBoundingClientRect()
+    this.wrongAnswer = false
+
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     //padding between the units
@@ -87,43 +91,13 @@ export default class ShapeSums {
 
     this.elements = drawBoard(this)
     this.InputHandler = new InputHandler(this, GAMESTATE);
-    this.updateGameState(GAMESTATE.RUNNING)
+    this.updateGameState(GAMESTATE.MENU)
     this.InputHandler.init()
 
     this.unitErrors = {}
     this.step = 11
+    this.clickedUnits = new Set()
   }
-
-
-  // Determine the number of rows and columns our Grid will have depending on the length of the sequence
-  determineRowAndCol(sequence){
-    let dimensions;
-    switch (sequence.length) {
-        case 4:
-          dimensions = {row:2, col:2}
-          break;
-        case 6:
-            dimensions = {row:2, col:3}
-            break;
-        case 8:
-            dimensions = {row:2, col:4}
-            break;
-        case 12:
-            dimensions = {row:3, col:4}
-            break;
-        case 16:
-            dimensions = {row:4, col:4}
-            break;
-        case 25:
-            dimensions = {row:5, col:5}
-        default:
-            dimensions = {row:5, col:5}
-
-      }
-      return dimensions 
-
-  }
-
 
   // here we update the current sequence and also shuffled it
   updateCurrentSequence(i){
@@ -153,38 +127,106 @@ export default class ShapeSums {
   start() {
   }
 
+  // That is used to move a level out of frame. You have to move explicitly all the seperable units
   moveLevelOutsideFrame(){
     let unitsAreOutsideTheCanvas = true;
-      [...this.elements].forEach((object) => {
+    [...this.elements['units']].forEach((object) => {
         object.changeXCenter(this.dx)
         if (object.position.x + object.pathRadius > this.rect.left){
           unitsAreOutsideTheCanvas = false;
         }
       });
-
+      this.elements['centeredSum'].changeXCenter(this.dx)
+      if (this.elements['centeredSum'].position.x + this.elements['centeredSum'].pathRadius > this.rect.left){
+        unitsAreOutsideTheCanvas = false;
+      }
       return unitsAreOutsideTheCanvas  
   }
 
+  // That is used to move a level inside the frame. You have to move explicitly all the seperable units
   moveLevelInsideFrame(){
-    [...this.elements].forEach((object) => {
+    [...this.elements['units']].forEach((object) => {
       object.changeXCenter(-this.dx);
+      object.points.forEach((point) => {
+        point.changeXCenter(-this.dx);
+
+      });
+    });
+    this.elements['centeredSum'].changeXCenter(-this.dx);
+    this.elements['centeredSum'].points.forEach((point) => {
+      point.changeXCenter(-this.dx);
+
     });
   }
 
+  // For now this is where the level assessement happens.
+  // It will probably become more complicared in the future
+  correctAssessement(){
+    console.log(this.clickedUnits)
+    let sum =  Array.from(this.clickedUnits).reduce(function (sum, item) {
+      console.log(item)
+      return item.dots + sum;
+    }, 0);
+    let correctSum = this.elements['centeredSum'].dots 
+    return correctSum == sum
+  }
+
   update(deltaTime) {
-    // Error Fliccker effect
-    for (const [key, value] of Object.entries(this.unitErrors)) {
-      this.unitErrors[key]--;
-      if (this.unitErrors[key] == 0 ){
-        delete this.unitErrors[key]
+
+    // this is were the transition between levels is handled
+    if (this.clickedUnits.size == 2 ) {
+      // this is where we should check if the sum is correcct
+      if (this.gamestate === GAMESTATE.RUNNING) {
+        // this.updateGameState(GAMESTATE.LEVELDONE)
+        // this.clickedUnits.clear()
+          this.updateGameState(GAMESTATE.ASSESSINGLEVEL)
+
+          // this determines how long the crossmark or checkmark will remain in frame
+          this.counter = 50;
+          
+          if (this.correctAssessement()){
+            let checkmark = document.getElementById("screen-checkmark")
+            checkmark.style.display = 'block';
+            setTimeout(() => {
+              checkmark.style.zIndex = '2';
+              checkmark.classList.add("grow-checkmark");
+            }, 5);
+          } else{
+            let crossmark = document.getElementById("screen-crossmark")
+            crossmark.style.display = 'block';
+            setTimeout(() => {
+              crossmark.style.zIndex = '2';
+              crossmark.classList.add("grow-crossmark");
+            }, 5);
+            this.wrongAnswer = true;
+          }
+          
 
       }
     }
-    // this is were the transition between levels is handled
-    if (this.currentBoard.length == this.candidateAnswer.length ) {
-      if (this.gamestate === GAMESTATE.RUNNING) {
+
+    if (this.gamestate === GAMESTATE.ASSESSINGLEVEL) {
+
+
+      if (this.counter == 0){
         this.updateGameState(GAMESTATE.LEVELDONE)
+        this.clickedUnits.clear()
+
+        // expicitly reset the checkmark or crossmark
+        if (this.wrongAnswer){
+          let crossmark = document.getElementById("screen-crossmark")
+          crossmark.style.display = 'none';
+          crossmark.classList.remove("grow-crossmark");
+        }else{
+          let checkmark = document.getElementById("screen-checkmark")
+          checkmark.style.display = 'none';
+          checkmark.classList.remove("grow-checkmark");
+        }       
+
+        this.wrongAnswer = false
       }
+      this.counter -= 1;
+
     }
 
     if (this.gamestate === GAMESTATE.LEVELDONE){
@@ -216,9 +258,9 @@ export default class ShapeSums {
   }
 
   draw(ctx) {
-    this.elements['centeredSum'].draw(ctx)
-    if (this.gamestate === GAMESTATE.RUNNING || this.gamestate === GAMESTATE.LEVELDONE || this.gamestate === GAMESTATE.NEWLEVEL) {
-      [...this.elements['units']].forEach((object) => {
+    if (this.gamestate === GAMESTATE.RUNNING || this.gamestate === GAMESTATE.LEVELDONE || this.gamestate === GAMESTATE.NEWLEVEL || this.gamestate === GAMESTATE.ASSESSINGLEVEL) {
+      this.elements['centeredSum'].draw(ctx);
+    [...this.elements['units']].forEach((object) => {
         object.draw(ctx)
       });
     }
@@ -244,24 +286,14 @@ export default class ShapeSums {
       y:clientY
     };
     
-
-    // [...this.elements].forEach((object) => {
-    //   // find the Grid Unit that was actually clicked
-    //   if (circleAndMouseCollissionDetection(object.position.x, object.position.y, object.pathRadius, this.clicked)){
-    //     // Here check whether the value clicked is the next correct item in the correct sequence
-    //     // if true then proceed with the click event
-    //     // if false then notify the player
-    //     let value = this.shuffledBoard[object.row];
-    //     let position = this.candidateAnswer.length
-    //     if (this.currentBoard[position] == value) {
-    //       this.candidateAnswer.push(value)
-
-    //     }else{
-    //       this.unitErrors[value] = 80
-    //     }
-        
-    //   }
-    // });
+    // this way it will never check the middle unit
+    [...this.elements['units']].forEach((object) => {
+      // find the Grid Unit that was actually clicked
+      if (pointInsidePolygon([this.clicked.x, this.clicked.y],object.path)){
+        object.clicked = true;
+        this.clickedUnits.add(object)
+      }
+    });
   }
 
 
