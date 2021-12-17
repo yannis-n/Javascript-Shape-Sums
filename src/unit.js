@@ -6,11 +6,11 @@ export default class Unit {
 
     this.game = game;
     this.dots = dots;
-    this.pointsRadius = 5;
     this.position = position;
     this.clicked = false;
 
     this.radius = game.unitMeasurement.radius
+    this.pointsRadius = this.radius / 10;
     this.sides = game.currentDimensions;
     // this.sides = game.currentDimensions;
     if (sumUnit){
@@ -53,19 +53,20 @@ export default class Unit {
       if (item[0] < this.position.y) {
         item[0] += this.pointsRadius * 2
       }else if (item[0] > this.position.y){
-        item[0] -= this.pointsRadius * 2
+        item[0] -= this.pointsRadius * 2  
       };
       return item
     })
 
     this.points = []
-
     for (let i = 0; i < dots; i++) {
       do{
         var plusOrMinusX = Math.random() < 0.5 ? -1 : 1;
         var plusOrMinusY = Math.random() < 0.5 ? -1 : 1;
-        var x = plusOrMinusX * Math.floor(Math.round(Math.random()) * this.radius/this.pointsRadius);
-        var y = plusOrMinusY * Math.floor(Math.round(Math.random()) * this.radius/this.pointsRadius);
+
+        // this makes sure that the random positioning of the points will only take place with centers with a distance of 2*point_radius
+        var x = plusOrMinusX * Math.floor(Math.round(Math.random()) * 2 * this.pointsRadius);
+        var y = plusOrMinusY * Math.floor(Math.round(Math.random()) * 2 * this.pointsRadius);
         
         var statement2 = pointsColliding([this.position.x + x, this.position.y + y], this.points)
         // var statement1 = !pointInsidePolygon([this.position.x + x, this.position.y + y],this.pointPerimenets)

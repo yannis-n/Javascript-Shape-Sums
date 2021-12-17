@@ -91,7 +91,7 @@ export default class ShapeSums {
 
     this.elements = drawBoard(this)
     this.InputHandler = new InputHandler(this, GAMESTATE);
-    this.updateGameState(GAMESTATE.MENU)
+    this.updateGameState(GAMESTATE.RUNNING)
     this.InputHandler.init()
 
     this.unitErrors = {}
@@ -119,7 +119,7 @@ export default class ShapeSums {
     // };
 
     this.unitMeasurement = {
-        radius : 50,
+        radius : 60,
       };
 
   }
@@ -132,12 +132,20 @@ export default class ShapeSums {
     let unitsAreOutsideTheCanvas = true;
     [...this.elements['units']].forEach((object) => {
         object.changeXCenter(this.dx)
-        if (object.position.x + object.pathRadius > this.rect.left){
+        object.points.forEach((point) => {
+          point.changeXCenter(this.dx);
+        });
+        if (object.position.x + object.radius > this.rect.left){
           unitsAreOutsideTheCanvas = false;
         }
       });
+
       this.elements['centeredSum'].changeXCenter(this.dx)
-      if (this.elements['centeredSum'].position.x + this.elements['centeredSum'].pathRadius > this.rect.left){
+      this.elements['centeredSum'].points.forEach((point) => {
+        point.changeXCenter(this.dx);
+      });
+
+      if (this.elements['centeredSum'].position.x + this.elements['centeredSum'].radius > this.rect.left){
         unitsAreOutsideTheCanvas = false;
       }
       return unitsAreOutsideTheCanvas  
@@ -149,13 +157,11 @@ export default class ShapeSums {
       object.changeXCenter(-this.dx);
       object.points.forEach((point) => {
         point.changeXCenter(-this.dx);
-
       });
     });
     this.elements['centeredSum'].changeXCenter(-this.dx);
     this.elements['centeredSum'].points.forEach((point) => {
       point.changeXCenter(-this.dx);
-
     });
   }
 
@@ -222,8 +228,6 @@ export default class ShapeSums {
           checkmark.style.display = 'none';
           checkmark.classList.remove("grow-checkmark");
         }       
-
-        this.wrongAnswer = false
       }
       this.counter -= 1;
 
@@ -251,6 +255,7 @@ export default class ShapeSums {
         this.moveLevelInsideFrame()
       }
       this.centeredXMod = this.centeredXMod - this.dx;     
+      this.wrongAnswer = false
 
     }
 
