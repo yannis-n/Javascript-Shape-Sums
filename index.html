@@ -5,16 +5,29 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style>
-		.screen-container{
+		body{
+			display: flex;
+			justify-content: center;
+		}
+		#screen-container{
 			position: relative;
 			width: fit-content;
-			width: 500px;
-			height: 500px;
+			width: 95%;
+			height: 95%;
+		}
+
+		@media screen and (min-width:800px) {
+			#screen-container{
+				position: relative;
+				width: fit-content;
+				width: 80%;
+				height: 80%;
+			}
 		}
 
 		#gameScreen { 
-			/* width: 100%; 
-			height: 100%; */
+			width: 100%; 
+			height: 100%;
 			z-index: 2;
 			position: absolute;
 			background-color: #dcf1fa;
@@ -110,7 +123,7 @@
 <body>	
 	
 
-	<div class="screen-container">
+	<div id="screen-container">
 		<canvas id="gameScreen" width="500" height="500"></canvas>
 		<span id="screen-checkmark" class="checkmark">
 			<div class="checkmark_stem"></div>

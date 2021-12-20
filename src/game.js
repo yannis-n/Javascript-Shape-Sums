@@ -99,6 +99,15 @@ export default class ShapeSums {
     this.clickedUnits = new Set()
   }
 
+  updateGameSize(GAME_WIDTH, GAME_HEIGHT){
+    this.gameWidth = GAME_WIDTH;
+    this.gameHeight = GAME_HEIGHT;
+    this.updateUnitMeasurement();
+    this.units = drawBoard(this, this.elements)
+    this.rect = this.canvas.getBoundingClientRect()
+
+  }
+
   // here we update the current sequence and also shuffled it
   updateCurrentSequence(i){
     this.currentSequence = i
@@ -118,10 +127,22 @@ export default class ShapeSums {
     //   unitHeight : (this.gameWidth - this.gap * (size-1)) / (size)
     // };
 
-    this.unitMeasurement = {
-        radius : 60,
-      };
 
+      if (this.gameWidth < 400){
+        this.unitMeasurement = {
+          radius : 60,
+
+        };
+      } else if (this.gameWidth > 1200){
+        this.unitMeasurement = {
+          radius : 100,
+
+        };
+      }else{
+        this.unitMeasurement = {
+          radius : this.gameWidth/12,
+        };
+      }
   }
 
   start() {

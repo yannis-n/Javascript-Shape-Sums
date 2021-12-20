@@ -24,4 +24,8 @@ export default class Point {
     ctx.fill() // fill it in
   
   }
+
+  updateSize(){
+    
+  }
 }

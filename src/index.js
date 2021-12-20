@@ -11,9 +11,9 @@ window.onload = function (){
   
   // let ctx = setupCanvas(canvas);
   
-  const GAME_WIDTH = rect.width;
-  const GAME_HEIGHT = rect.height;
-  const difficulty = 1;
+  let GAME_WIDTH = rect.width;
+  let GAME_HEIGHT = rect.height;
+  let difficulty = 1;
   
   let game = new Game(GAME_WIDTH, GAME_HEIGHT, difficulty, canvas);
   
@@ -31,8 +31,18 @@ window.onload = function (){
     
     requestAnimationFrame(gameLoop);
 
-      // ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-      // game.draw(ctx)
+    window.addEventListener('resize', function(){
+      let screenContainer = document.getElementById("screen-container");
+      canvas = createHiDPICanvas(screenContainer.offsetWidth, screenContainer.offsetHeight);
+      ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      ctx = canvas.getContext('2d');
+
+      GAME_WIDTH = screenContainer.offsetWidth;
+      GAME_HEIGHT = screenContainer.offsetHeight;
+
+      game.updateGameSize(GAME_WIDTH, GAME_HEIGHT)
+
+    });
     
     
 }
