@@ -1,6 +1,6 @@
 import InputHandler from "../src/input.js";
 import { drawBoard } from "./boardBuilder.js";
-import { createMenu } from "../src/helperScreens.js";
+import { createMenu, createLoadingBar } from "../src/helperScreens.js";
 import { createHiDPICanvas, circleAndMouseCollissionDetection, shuffle, pointInsidePolygon  } from "../src/helper.js";
 
 
@@ -86,17 +86,24 @@ export default class ShapeSums {
     this.difficulty = difficulty
 
 
-    this.menu = createMenu(this, gameWidth, gameHeight)
     
 
     this.elements = drawBoard(this)
     this.InputHandler = new InputHandler(this, GAMESTATE);
-    this.updateGameState(GAMESTATE.RUNNING)
+    this.updateGameState(GAMESTATE.LOADING)
     this.InputHandler.init()
 
     this.unitErrors = {}
     this.step = 11
     this.clickedUnits = new Set()
+
+    // this is where all the helper screens will be loaled #helperScreensCode
+
+    
+    this.menu = createMenu(this, gameWidth, gameHeight)
+    
+    this.loadingBar = createLoadingBar(this)
+
   }
 
   updateGameSize(GAME_WIDTH, GAME_HEIGHT){
@@ -227,13 +234,17 @@ export default class ShapeSums {
             }, 5);
             this.wrongAnswer = true;
           }
-          
+         
+
+      setTimeout(() => {
+        var audio = new Audio('media/audio/frouts.wav');
+        audio.play(); 
+      }, 400); 
 
       }
     }
 
     if (this.gamestate === GAMESTATE.ASSESSINGLEVEL) {
-
 
       if (this.counter == 0){
         this.updateGameState(GAMESTATE.LEVELDONE)
@@ -257,6 +268,7 @@ export default class ShapeSums {
     if (this.gamestate === GAMESTATE.LEVELDONE){
 
       this.dx = - 2 * this.rect.right / this.step;
+
       if (this.moveLevelOutsideFrame()){
         this.centeredXMod = 2 * this.rect.right;
         this.dx = this.centeredXMod / this.step;
@@ -280,6 +292,18 @@ export default class ShapeSums {
 
     }
 
+    if (this.gamestate === GAMESTATE.LOADING){
+
+      if (this.loadingBar.loaded()){
+        this.loadingBar.hide()
+            if (this.loadingBar.hidden()){
+              this.updateGameState(GAMESTATE.M)
+
+            }
+
+          
+      }
+    }
 
   }
 

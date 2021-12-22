@@ -1,0 +1,259 @@
+body, * {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+#screen-container {
+  position: relative;
+  width: fit-content;
+  width: 95%;
+  height: 95%;
+}
+
+@media screen and (min-width: 800px) {
+  #screen-container {
+    position: relative;
+    width: fit-content;
+    width: 80%;
+    height: 80%;
+  }
+}
+#gameScreen {
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  position: absolute;
+  background-color: #dcf1fa;
+}
+
+#game-menu {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  /* IE 9 */
+  -webkit-transform: translate(-50%, -50%);
+  /* Chrome, Safari, Opera */
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  min-height: 60%;
+  max-height: 80%;
+  padding: 10px 40px;
+  background-color: rgba(0, 114, 227, 0.8);
+  border-radius: 10px;
+  justify-content: space-evenly;
+  /* Rounded sliders */
+}
+#game-menu a {
+  padding: 10px 20px;
+  margin: 10px 0;
+  background-color: #fff;
+  border-radius: 50px;
+  text-decoration: none;
+  color: #000;
+  min-width: 150px;
+  text-align: center;
+}
+#game-menu div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 150px;
+}
+#game-menu .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+#game-menu .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+#game-menu .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+#game-menu .slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #fff;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+#game-menu input:checked + .slider {
+  background-color: #dcf1fa;
+}
+#game-menu input:focus + .slider {
+  box-shadow: 0 0 1px #dcf1fa;
+}
+#game-menu input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+  background-color: #0072e3;
+}
+#game-menu .slider.round {
+  border-radius: 34px;
+}
+#game-menu .slider.round:before {
+  border-radius: 50%;
+}
+
+.crossmark {
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  /* IE 9 */
+  -webkit-transform: translate(-50%, -50%);
+  /* Chrome, Safari, Opera */
+  transform: translate(-50%, -50%);
+  position: absolute;
+  -ms-transition: transform 0.4s ease-in-out;
+  /* IE 9 */
+  -webkit-transition: transform 0.4s ease-in-out;
+  /* Chrome, Safari, Opera */
+  transition: transform 0.4s ease-in-out;
+  background: #fff;
+  width: 22px;
+  height: 22px;
+  z-index: 1;
+  border-radius: 50%;
+}
+
+.crossmark1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%) rotate(45deg);
+  /* IE 9 */
+  -webkit-transform: translate(-50%, -50%) rotate(45deg);
+  /* Chrome, Safari, Opera */
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 3px;
+  height: 12px;
+  background-color: rgba(171, 2, 3, 0.97);
+}
+
+.crossmark2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%) rotate(-45deg);
+  /* IE 9 */
+  -webkit-transform: translate(-50%, -50%) rotate(-45deg);
+  /* Chrome, Safari, Opera */
+  transform: translate(-50%, -50%) rotate(-45deg);
+  width: 3px;
+  height: 12px;
+  background-color: rgba(171, 2, 3, 0.97);
+}
+
+.checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%) rotate(45deg);
+  /* IE 9 */
+  -webkit-transform: translate(-50%, -50%) rotate(45deg);
+  /* Chrome, Safari, Opera */
+  transform: translate(-50%, -50%) rotate(45deg);
+  -ms-transition: transform 0.4s ease-in-out;
+  /* IE 9 */
+  -webkit-transition: transform 0.4s ease-in-out;
+  /* Chrome, Safari, Opera */
+  transition: transform 0.4s ease-in-out;
+  display: block;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.checkmark_stem {
+  position: absolute;
+  width: 3px;
+  height: 9px;
+  background-color: #0072e3;
+  left: 11px;
+  top: 6px;
+}
+
+.checkmark_kick {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background-color: #0072e3;
+  left: 8px;
+  top: 12px;
+}
+
+.grow-checkmark {
+  -ms-transform: scale(5) translate(-10%, -10%) rotate(45deg);
+  /* IE 9 */
+  -webkit-transform: scale(5) translate(-10%, -10%) rotate(45deg);
+  /* Chrome, Safari, Opera */
+  transform: scale(5) translate(-10%, -10%) rotate(45deg);
+}
+
+.grow-crossmark {
+  -ms-transform: scale(5) translate(-10%, -10%);
+  /* IE 9 */
+  -webkit-transform: scale(5) translate(-10%, -10%);
+  /* Chrome, Safari, Opera */
+  transform: scale(5) translate(-10%, -10%);
+}
+
+#myProgress {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  /* IE 9 */
+  -webkit-transform: translate(-50%, -50%);
+  /* Chrome, Safari, Opera */
+  transform: translate(-50%, -50%);
+  width: 80%;
+  background-color: #fff;
+  z-index: 3;
+  border-radius: 5px;
+  -ms-transition: opacity 1s;
+  /* IE 9 */
+  -webkit-transition: opacity 1s;
+  /* Chrome, Safari, Opera */
+  transition: opacity 1s;
+}
+
+#myBar {
+  width: 10%;
+  height: 30px;
+  background-color: #0072e3;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+  border-radius: 5px;
+}
+
+/*# sourceMappingURL=index.css.map */

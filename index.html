@@ -4,120 +4,9 @@
 	<title>Shape Sums</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<style>
-		body{
-			display: flex;
-			justify-content: center;
-		}
-		#screen-container{
-			position: relative;
-			width: fit-content;
-			width: 95%;
-			height: 95%;
-		}
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/index.css">
 
-		@media screen and (min-width:800px) {
-			#screen-container{
-				position: relative;
-				width: fit-content;
-				width: 80%;
-				height: 80%;
-			}
-		}
-
-		#gameScreen { 
-			width: 100%; 
-			height: 100%;
-			z-index: 2;
-			position: absolute;
-			background-color: #dcf1fa;
-		}
-
-
-		.crossmark {
-			-webkit-transition: transform .4s ease-in-out;
-			background: #fff;
-			width: 22px;
-			height: 22px;
-			z-index: 1;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			border-radius: 50%;
-			-ms-transform: translate(-50%, -50%); /* IE 9 */
-			-webkit-transform: translate(-50%, -50%); /* Chrome, Safari, Opera */
-			transform: translate(-50%, -50%);
-		}
-		
-		.crossmark1{
-			position: absolute;
-			width:3px;
-			height:12px;
-			background-color:rgb(171 2 3 / 97%);
-			top: 50%;
-			left: 50%;
-			-ms-transform: translate(-50%, -50%) rotate(45deg); /* IE 9 */
-			-webkit-transform: translate(-50%, -50%) rotate(45deg); /* Chrome, Safari, Opera */
-			transform: translate(-50%, -50%) rotate(45deg);
-		}
-
-		.crossmark2{
-			position: absolute;
-			width:3px;
-			height:12px;
-			background-color:rgb(171 2 3 / 97%);
-			top: 50%;
-			left: 50%;
-			-ms-transform: translate(-50%, -50%) rotate(-45deg); /* IE 9 */
-			-webkit-transform: translate(-50%, -50%) rotate(-45deg); /* Chrome, Safari, Opera */
-			transform: translate(-50%, -50%) rotate(-45deg);
-		}
-
-		.checkmark {
-			-webkit-transition: transform .4s ease-in-out;
-			display: block;
-			z-index: 1;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			width: 22px;
-			height:22px;
-			border-radius: 50%;
-			background-color: #fff;
-			-ms-transform: translate(-50%, -50%) rotate(45deg); /* IE 9 */
-			-webkit-transform: translate(-50%, -50%) rotate(45deg); /* Chrome, Safari, Opera */
-			transform: translate(-50%, -50%) rotate(45deg);
-		}
-
-		.checkmark_stem {
-			position: absolute;
-			width:3px;
-			height:9px;
-			background-color:rgba(0,114,227,1);
-			left:11px;
-			top:6px;
-		}
-
-		.checkmark_kick {
-			position: absolute;
-			width:3px;
-			height:3px;
-			background-color:rgba(0,114,227,1);
-			left:8px;
-			top:12px;
-		}
-
-.grow-checkmark { 
-	-ms-transform: scale(5) translate(-10%, -10%) rotate(45deg); /* IE 9 */
-	-webkit-transform: scale(5) translate(-10%, -10%) rotate(45deg); /* Chrome, Safari, Opera */
-	transform: scale(5) translate(-10%, -10%) rotate(45deg);
-}
-
-.grow-crossmark { 
-	-ms-transform: scale(5) translate(-10%, -10%) ;/* IE 9 */
-	-webkit-transform: scale(5) translate(-10%, -10%) ;/* Chrome, Safari, Opera */
-	transform: scale(5) translate(-10%, -10%) ;}
-	</style>
 </head>
 
 <body>	
@@ -134,6 +23,21 @@
 			<div class="crossmark1"></div>
 			<div class="crossmark2"></div>
 		</span>
+
+		<div id="game-menu">
+			<span class="menu-title">Main Menu</span>
+			<a href="#" class="active">Resume</a>
+			<a href="#">How To Play</a>
+			<a href="#">Settings</a>
+			<div>
+				<label for="soundToggle">Sound</label>
+				<label class="switch">
+					<input id="soundToggle" name="soundToggle" type="checkbox" checked>
+					<span class="slider round"></span>
+				</label>
+			</div>
+		</div>
+
 	</div>
 	<script type="module" src="src/index.js"></script>
 </body>
