@@ -1,52 +1,91 @@
 import { circleAndMouseCollissionDetection } from "../src/helper.js";
 
-export default class Menu {
-    constructor(game, gameWidth, gameHeight) {
-  
-      this.game = game;
-  
-      this.gameWidth = gameWidth;
-      this.gameHeight = gameHeight;
-      this.path = [
-        this.gameWidth/2.5, this.gameHeight/2.5,
-        this.gameWidth/2.5, this.gameHeight-this.gameHeight/2.5,
-        this.gameWidth-this.gameWidth/2.5, this.gameHeight/2
-      ]
-      this.buttonRadius = this.gameWidth/6
-    }
-  
-  
-    // draw the unit rect with different border widths
-    draw(ctx) {
-        ctx.rect(0, 0, this.gameWidth, this.gameHeight);
-        ctx.fillStyle = "rgba(0,0,0,1)";
-        ctx.fill();
-  
-        // add hover effect
-        if (circleAndMouseCollissionDetection(this.gameWidth/2, this.gameHeight/2, this.buttonRadius, this.game.mouse)){
-            ctx.strokeStyle = 'rgba(256,256,256,0.5)';
-            ctx.fillStyle = "rgba(256,256,256,0.5)";
-        }else{
-            ctx.strokeStyle = 'rgba(256,256,256,1)';
-            ctx.fillStyle = "rgba(256,256,256,1)";
-        }
-        ctx.beginPath();
-        ctx.moveTo(this.gameWidth/2.2, this.gameHeight/2.3);
-        
-        ctx.lineTo(this.gameWidth/2.2, this.gameHeight-this.gameHeight/2.3);
-  
-        ctx.lineTo(this.gameWidth-this.gameWidth/2.3, this.gameHeight/2);
-        
-        ctx.lineTo(this.gameWidth/2.2, this.gameHeight/2.3);
-  
-        ctx.stroke();
-  
-        ctx.fill();
+const MENULINKS = {
+  PLAY: 0,
+};
 
-        ctx.beginPath();
-        ctx.lineWidth =2;
-        ctx.arc(this.gameWidth/2, this.gameHeight/2, this.buttonRadius, 0, 2 * Math.PI);
-        ctx.stroke();
+export default class Menu {
+    constructor(game) {
+      this.game = game
+      let markup = this.createHTML();
+      let canvas = document.getElementById("gameScreen");
+     
+      this.gameMenu = document.createElement("div");
+      this.gameMenu.id = 'game-menu'
+  
+      this.gameMenu.innerHTML = markup;
+
+  
+      canvas.parentNode.insertBefore(this.gameMenu, canvas);
+
+
+      this.fadedout = true
+
+      this.hidden = function(){
+        return this.gameMenu.style.display != "flex";
+      }
+
+      this.eventHandler()
+
     }
+
+    createHTML() {
+      return `
+        <span class="menu-title">Main Menu</span>
+        <a href="#" data-menu-item="${MENULINKS.PLAY}" class="active">Play</a>
+        <a href="#" data-menu-item="tutorial">How To Play</a>
+        <a href="#" data-menu-item="setting">Settings</a>
+        <div>
+          <label for="soundToggle">Sound</label>
+          <label class="switch">
+            <input id="soundToggle" name="soundToggle" type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      `;
+    }
+
+    eventHandler(){
+        this.gameMenu.addEventListener('transitionend', function(event) {
+            this.fadedout = !this.fadedout;
+            console.log(this.fadedout)
+          }.bind(this));
+
+          // this.gameMenu.querySelectorAll('a').addEventListener('click', function(event) {
+          //   console.log(this.fadedout)
+          // }.bind(this));
+          let anchors = this.gameMenu.getElementsByTagName('a');
+          for(let z = 0; z < anchors.length; z++) {
+              let elem = anchors[z];   
+              elem.onclick = function() {
+                  let action = elem.getAttribute('data-menu-item');
+                  console.log(elem)
+                  console.log(action)
+                  if (MENULINKS.PLAY == action){
+                    this.game.updateGameState(this.game.GAMESTATE.RUNNING)
+                    console.log(this.game)
+
+                  }
+
+              }.bind(this);
+          }
+
+    }
+
+    show(){
+      this.gameMenu.style.display = "flex";
+      setTimeout(() => {
+        this.gameMenu.style.opacity = 1;
+
+      }, 400);
+    }
+
+    hide(){ 
+
+        if (myProgress.style.opacity !== 0){
+            myProgress.style.opacity = 0
+        }
+    }
+  
   }
   

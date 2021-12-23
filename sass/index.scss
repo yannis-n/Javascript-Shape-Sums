@@ -5,6 +5,13 @@ $menu-padding:40px;
 
 @use 'switch' as sw;
 
+@include sw.configure(
+    $background-color-deactivated: #ccc,
+    $slider-color: #fff,
+    $slider-color-activated: $main-color,
+    $background-color-activated: $background-color 
+);
+@include sw.styles;
 
 @mixin translateMiddle($extraTransformation: '') {
     top: 50%;
@@ -71,15 +78,25 @@ body{
     z-index: 4;
     @include translateMiddle;
     @include flex-center-cols;
+    @include transition(opacity 1s);
+    opacity: 0;
+    display: none;
     width:80%;
+    max-width: 350px;
     min-height: 60%;
     max-height: 80%;
     padding: 10px $menu-padding;
     background-color: rgba(0,114,227,0.8);
     border-radius: 10px;
     justify-content: space-evenly;
-    
+    text-align: center;
+
     $min-width:150px; 
+
+    .menu-title{
+        color: #fff;
+        min-width: $min-width;   
+    }
 
     a{
         padding: $distance-between-items 20px;
@@ -97,15 +114,9 @@ body{
         justify-content: space-between;
         align-items: center;
         min-width: $min-width;   
+        color: #fff
     }
 
-    @include sw.configure(
-        $background-color-deactivated: #ccc,
-        $slider-color: #fff,
-        $slider-color-activated: $main-color,
-        $background-color-activated: $background-color 
-    );
-    @include sw.styles;
 
 }
 

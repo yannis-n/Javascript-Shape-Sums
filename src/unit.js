@@ -77,7 +77,7 @@ export default class Unit {
 
   updateSize(position, unitMeasurement) {
     this.position = position;
-
+    console.log(position)
     this.radius = unitMeasurement.radius
     this.pointsRadius = this.radius / 10;
     this.apothem = this.radius * Math.cos(Math.PI/this.sides)

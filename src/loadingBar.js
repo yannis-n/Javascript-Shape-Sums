@@ -42,6 +42,11 @@ export default class LoadingBar {
 
           }.bind(this));
 
+          myProgress.addEventListener('click', function(event) {
+              this.fadedout = !this.fadedout;
+
+          }.bind(this));
+
     }
 
     startLoading(){
@@ -50,7 +55,6 @@ export default class LoadingBar {
               i = 1;
               var width = 0;
               var id = setInterval(frame, 10);
-              console.log(width)
 
               function frame() {
                 if (width >= 100) {

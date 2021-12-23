@@ -1,6 +1,6 @@
 import InputHandler from "../src/input.js";
 import { drawBoard } from "./boardBuilder.js";
-import { createMenu, createLoadingBar } from "../src/helperScreens.js";
+import { updateGameStateForHelperScreens, createMenu, createLoadingBar } from "../src/helperScreens.js";
 import { createHiDPICanvas, circleAndMouseCollissionDetection, shuffle, pointInsidePolygon  } from "../src/helper.js";
 
 
@@ -57,6 +57,7 @@ const shapeSums = [
 export default class ShapeSums {
   constructor(gameWidth, gameHeight, difficulty, canvas) {
     this.counter = 0;
+    this.GAMESTATE = GAMESTATE;
     this.canvas = canvas
     this.rect = canvas.getBoundingClientRect()
     this.wrongAnswer = false
@@ -99,10 +100,10 @@ export default class ShapeSums {
 
     // this is where all the helper screens will be loaled #helperScreensCode
 
-    
-    this.menu = createMenu(this, gameWidth, gameHeight)
-    
-    this.loadingBar = createLoadingBar(this)
+    this.helperScreens = {
+      menu : createMenu(this, gameWidth, gameHeight),    
+      loadingBar : createLoadingBar(this)
+    }
 
   }
 
@@ -196,7 +197,6 @@ export default class ShapeSums {
   // For now this is where the level assessement happens.
   // It will probably become more complicared in the future
   correctAssessement(){
-    console.log(this.clickedUnits)
     let sum =  Array.from(this.clickedUnits).reduce(function (sum, item) {
       console.log(item)
       return item.dots + sum;
@@ -292,32 +292,20 @@ export default class ShapeSums {
 
     }
 
-    if (this.gamestate === GAMESTATE.LOADING){
+    updateGameStateForHelperScreens(this, GAMESTATE)
 
-      if (this.loadingBar.loaded()){
-        this.loadingBar.hide()
-            if (this.loadingBar.hidden()){
-              this.updateGameState(GAMESTATE.M)
-
-            }
-
-          
-      }
-    }
 
   }
 
   draw(ctx) {
-    if (this.gamestate === GAMESTATE.RUNNING || this.gamestate === GAMESTATE.LEVELDONE || this.gamestate === GAMESTATE.NEWLEVEL || this.gamestate === GAMESTATE.ASSESSINGLEVEL) {
-      this.elements['centeredSum'].draw(ctx);
-    [...this.elements['units']].forEach((object) => {
-        object.draw(ctx)
-      });
-    }
+      if (this.gamestate == GAMESTATE.RUNNING) {
+        this.elements['centeredSum'].draw(ctx);
+        [...this.elements['units']].forEach((object) => {
+            object.draw(ctx)
+          });
+      }
 
-    if (this.gamestate === GAMESTATE.MENU) {
-      this.menu.draw(ctx)
-    }
+    
   }
 
   updateGameState(state){
