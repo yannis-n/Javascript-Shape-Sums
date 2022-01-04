@@ -144,7 +144,7 @@ export default class Unit {
     let pathRadius = this.pathRadius   
     // draw the unit perimeter
     drawPolygon(ctx, this.position.x, this.position.y, this.radius, this.sides , this.rotateAngle)
-    if (this.clicked){
+    if (this.game.clickedUnits.has(this)){
       if (!this.game.wrongAnswer){
         ctx.fillStyle = "rgba(35,224,27,1)";
       }else{

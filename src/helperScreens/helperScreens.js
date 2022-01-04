@@ -1,5 +1,6 @@
-import Menu from "../src/menu.js";
-import LoadingBar from "./loadingBar.js";
+import Menu from "../../src/helperScreens/menu.js";
+import LoadingBar from "../../src/helperScreens/loadingBar.js";
+import MenuBar from "../../src/helperScreens/menuBar.js";
 
 export function createMenu(game, gameWidth, gameHeight){
         return new Menu(game, gameWidth, gameHeight)
@@ -7,6 +8,10 @@ export function createMenu(game, gameWidth, gameHeight){
 
 export function createLoadingBar(game){
         return new LoadingBar(game)
+}
+
+export function createMenuBar(game){
+        return new MenuBar(game)
 }
 
 
@@ -26,6 +31,23 @@ export function updateGameStateForHelperScreens(game, GAMESTATE){
       if (game.gamestate === GAMESTATE.MENU) {
         if (game.helperScreens.menu.hidden()){
                 game.helperScreens.menu.show()
+        }
+      }
+
+      if (game.gamestate === GAMESTATE.PAUSED) {
+        if (game.helperScreens.menu.hidden()){
+                console.log('test')
+              game.helperScreens.menu.pause()
+        }
+
+        if (!game.helperScreens.menuBar.hidden()){
+                game.helperScreens.menuBar.hide ()
+          }
+      }
+
+      if (game.gamestate === GAMESTATE.RUNNING) {
+        if (game.helperScreens.menuBar.hidden()){
+              game.helperScreens.menuBar.show()
         }
       }
 }

@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
   let GAME_WIDTH = rect.width;
   let GAME_HEIGHT = rect.height;
   let difficulty = 1;
-  canvas = createHiDPICanvas(screenContainer.offsetWidth, screenContainer.offsetHeight);
-  console.log(canvas)
-  ctx = canvas.getContext('2d');
+  // canvas = createHiDPICanvas(screenContainer.offsetWidth, screenContainer.offsetHeight);
+  // console.log(canvas)
+  // ctx = canvas.getContext('2d');
   let game = new Game(GAME_WIDTH, GAME_HEIGHT, difficulty, canvas);
 
 
@@ -39,14 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
       let screenContainer = document.getElementById("screen-container");
       canvas = createHiDPICanvas(screenContainer.offsetWidth, screenContainer.offsetHeight);
       console.log(canvas)
-      // ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
       ctx = canvas.getContext('2d');
       console.log(ctx)
 
-      // GAME_WIDTH = screenContainer.offsetWidth;
-      // GAME_HEIGHT = screenContainer.offsetHeight;
+      GAME_WIDTH = screenContainer.offsetWidth;
+      GAME_HEIGHT = screenContainer.offsetHeight;
 
-      // game.updateGameSize(GAME_WIDTH, GAME_HEIGHT)
+      game.updateGameSize(GAME_WIDTH, GAME_HEIGHT)
 
     });
     

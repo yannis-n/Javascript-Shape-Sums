@@ -1,6 +1,6 @@
 import InputHandler from "../src/input.js";
 import { drawBoard } from "./boardBuilder.js";
-import { updateGameStateForHelperScreens, createMenu, createLoadingBar } from "../src/helperScreens.js";
+import { updateGameStateForHelperScreens, createMenu, createLoadingBar, createMenuBar } from "../src/helperScreens/helperScreens.js";
 import { createHiDPICanvas, circleAndMouseCollissionDetection, shuffle, pointInsidePolygon  } from "../src/helper.js";
 
 
@@ -56,6 +56,7 @@ const shapeSums = [
 
 export default class ShapeSums {
   constructor(gameWidth, gameHeight, difficulty, canvas) {
+    this.tutorial = 'This is a tutorial. For now you have to try playing';
     this.counter = 0;
     this.GAMESTATE = GAMESTATE;
     this.canvas = canvas
@@ -102,9 +103,15 @@ export default class ShapeSums {
 
     this.helperScreens = {
       menu : createMenu(this, gameWidth, gameHeight),    
-      loadingBar : createLoadingBar(this)
+      loadingBar : createLoadingBar(this),
+      menuBar : createMenuBar(this),
     }
 
+  }
+
+  undoAnswers(){
+    console.log('eee')
+    this.clickedUnits.clear()
   }
 
   updateGameSize(GAME_WIDTH, GAME_HEIGHT){
@@ -235,11 +242,13 @@ export default class ShapeSums {
             this.wrongAnswer = true;
           }
          
-
-      setTimeout(() => {
-        var audio = new Audio('media/audio/frouts.wav');
-        audio.play(); 
-      }, 400); 
+      if (this.helperScreens.menu.soundOn){
+        setTimeout(() => {
+          var audio = new Audio('media/audio/frouts.wav');
+          audio.play(); 
+        }, 1000); 
+      }
+      
 
       }
     }
@@ -266,7 +275,6 @@ export default class ShapeSums {
     }
 
     if (this.gamestate === GAMESTATE.LEVELDONE){
-
       this.dx = - 2 * this.rect.right / this.step;
 
       if (this.moveLevelOutsideFrame()){
@@ -291,15 +299,15 @@ export default class ShapeSums {
       this.wrongAnswer = false
 
     }
-
+    
     updateGameStateForHelperScreens(this, GAMESTATE)
 
 
   }
 
   draw(ctx) {
-      if (this.gamestate == GAMESTATE.RUNNING) {
-        this.elements['centeredSum'].draw(ctx);
+    if (this.gamestate === GAMESTATE.RUNNING || this.gamestate === GAMESTATE.LEVELDONE || this.gamestate === GAMESTATE.NEWLEVEL || this.gamestate === GAMESTATE.ASSESSINGLEVEL) {
+      this.elements['centeredSum'].draw(ctx);
         [...this.elements['units']].forEach((object) => {
             object.draw(ctx)
           });
@@ -312,11 +320,11 @@ export default class ShapeSums {
     this.gamestate = state;
   }
 
-  checkPlayButtonClick(clientX, clientY){
-    if (circleAndMouseCollissionDetection(this.gameWidth/2, this.gameHeight/2, this.menu.buttonRadius, this.mouse)){
-      this.updateGameState(GAMESTATE.RUNNING)
-    }
-  }
+  // checkPlayButtonClick(clientX, clientY){
+  //   if (circleAndMouseCollissionDetection(this.gameWidth/2, this.gameHeight/2, this.helperScreens.menu.buttonRadius, this.mouse)){
+  //     this.updateGameState(GAMESTATE.RUNNING)
+  //   }
+  // }
 
   handleUnitClick(clientX, clientY){
     this.clicked = {
@@ -336,6 +344,7 @@ export default class ShapeSums {
 
 
   togglePause() {
+    console.log('TEST')
     if (this.gamestate == GAMESTATE.PAUSED) {
       this.gamestate = GAMESTATE.RUNNING;
     } else {
