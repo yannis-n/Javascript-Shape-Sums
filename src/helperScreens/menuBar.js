@@ -19,9 +19,13 @@ export default class MenuBar {
     this.buttons = {}
     // Create the various buttons neccessary for the menu bar
     // It is done this way in case it is neccessary to load different buttons for different games
-    this.buttons.undoButton = document.createElement("button");
-    this.buttons.undoButton.id = 'undo-button'
-    this.buttons.undoButton.innerHTML = '<div class="reloadSingle"></div>'
+    this.undoButtonFuncionality = game.undoButtonFuncionality
+    console.log(this.undoButtonFuncionality)
+    if(this.undoButtonFuncionality){
+      this.buttons.undoButton = document.createElement("button");
+      this.buttons.undoButton.id = 'undo-button'
+      this.buttons.undoButton.innerHTML = '<div class="reloadSingle"></div>'
+    }
 
     this.buttons.pauseButton = document.createElement("button");
     this.buttons.pauseButton.id = 'pause'
@@ -97,12 +101,14 @@ export default class MenuBar {
             this.game.togglePause()
         }
     }.bind(this);
-
-    this.buttons.undoButton.onclick = function() {
+    
+    if (this.undoButtonFuncionality){
+      this.buttons.undoButton.onclick = function() {
         if (this.game.gamestate == this.game.GAMESTATE.RUNNING){
             this.game.undoAnswers()
         }
     }.bind(this);
+    }
   }
 
   show(element = this.gameMenuBar){

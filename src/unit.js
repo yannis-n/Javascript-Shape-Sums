@@ -1,6 +1,5 @@
 import { circleAndMouseCollissionDetection, createPolygon, pointInsidePolygon, pointsColliding, drawPolygon, circleInsidePolygon } from "../src/helper.js";
 import Point from "./point.js";
-
 export default class Unit {
   constructor(game,dots, position, unitMeasurement, rotation, sumUnit = false) {
 
@@ -13,6 +12,8 @@ export default class Unit {
     this.pointsRadius = this.radius / 10;
     this.sides = game.currentDimensions;
     // this.sides = game.currentDimensions;
+    this.sumUnit = sumUnit;
+
     if (sumUnit){
       if (this.sides % 2 != 0){
         this.rotateAngle =  0;
@@ -153,7 +154,12 @@ export default class Unit {
       }
 
     }else{
-      ctx.fillStyle = "rgba(0,114,227,1)";
+      if (!this.sumUnit && pointInsidePolygon([this.game.mouse.x, this.game.mouse.y], this.path) && this.game.gamestate == this.game.GAMESTATE.RUNNING){
+        ctx.fillStyle = "rgba(0,114,227,0.8)";
+      }else{
+        ctx.fillStyle = "rgba(0,114,227,1)";
+
+      }
 
     }
     ctx.fill()

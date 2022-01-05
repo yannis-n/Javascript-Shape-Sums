@@ -31,7 +31,6 @@ export default class Menu {
 
       this.soundToggle = document.getElementById('soundToggle');
       this.fadedout = true;
-      this.soundOn = true;
       this.hidden = function(){
         return this.gameMenu.style.display != "flex";
       }
@@ -104,7 +103,7 @@ export default class Menu {
           }.bind(this);
 
           this.soundToggle.onchange = function(){
-            this.soundOn = this.soundToggle.checked
+            this.game.soundOn = this.soundToggle.checked
           }.bind(this);
     }
 

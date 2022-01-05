@@ -53,5 +53,64 @@ export function updateGameStateForHelperScreens(game, GAMESTATE){
               game.helperScreens.menuBar.show()
         }
       }
+
+      if (game.correctAndWrongAssessement){
+        if ( game.levelCompleted() ) {
+                // this is where we should check if the sum is correct
+                if (game.gamestate === GAMESTATE.RUNNING) {
+                    game.updateGameState(GAMESTATE.ASSESSINGLEVEL)
+          
+                    // this determines how long the crossmark or checkmark will remain in frame
+                    game.counter = 50;
+                    
+                    if (game.correctAssessement()){
+                      let checkmark = document.getElementById("screen-checkmark")
+                      checkmark.style.display = 'block';
+                      setTimeout(() => {
+                        checkmark.style.zIndex = '2';
+                        checkmark.classList.add("grow-checkmark");
+                      }, 5);
+                    } else{
+                      let crossmark = document.getElementById("screen-crossmark")
+                      crossmark.style.display = 'block';
+                      setTimeout(() => {
+                        crossmark.style.zIndex = '2';
+                        crossmark.classList.add("grow-crossmark");
+                      }, 5);
+                      game.wrongAnswer = true;
+                    }
+                   
+                // if (game.soundOn){
+                //   setTimeout(() => {
+                //     var audio = new Audio('media/audio/frouts.wav');
+                //     audio.play(); 
+                //   }, 1000); 
+                // }
+                
+          
+                }
+              }
+        
+              if (game.gamestate === GAMESTATE.ASSESSINGLEVEL) {
+                
+                if (game.counter == 0){
+                  game.updateGameState(GAMESTATE.LEVELDONE)
+                  game.refreshAnswers()
+          
+                  // expicitly reset the checkmark or crossmark
+                  if (game.wrongAnswer){
+                    let crossmark = document.getElementById("screen-crossmark")
+                    crossmark.style.display = 'none';
+                    crossmark.classList.remove("grow-crossmark");
+                  }else{
+                    let checkmark = document.getElementById("screen-checkmark")
+                    checkmark.style.display = 'none';
+                    checkmark.classList.remove("grow-checkmark");
+                  }       
+                }
+                game.counter -= 1;
+          
+              }
+      }
 }
 

@@ -234,6 +234,7 @@ $menu-item-color: #000;
 
 
 #game-countdown{
+    pointer-events: none;
     position: absolute;
     @include translateMiddle;
     z-index: 5;

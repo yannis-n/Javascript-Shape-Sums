@@ -29,25 +29,15 @@ export default class InputHandler {
           }
         });
 
-        // document.addEventListener("keydown", event => {
-        //   if (this.game.gamestate === this.GAMESTATE.RUNNING) {
-
-           
-        //       console.log(event)
-        //       switch (event.keyCode) {
-                
-        
-        //         case 32:
-        //           // this.game.togglePause();
-        //           break;
-        
-
-        //       }
-            
-        //   }
-        // });
-
-        
+        document.addEventListener("keydown", event => {
+          if (this.game.gamestate === this.GAMESTATE.RUNNING) {
+              switch (event.keyCode) {
+                case 32:
+                this.game.togglePause();
+                break;
+              }            
+          }
+        });        
     }
   }
   

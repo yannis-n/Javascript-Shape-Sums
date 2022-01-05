@@ -103,6 +103,11 @@ export default class ShapeSums {
 
     // this is where all the helper screens will be loaled #helperScreensCode
 
+    this.undoButtonFuncionality = true;
+    this.soundOn = true;
+    this.correctAndWrongAssessement = true;
+
+    
     this.helperScreens = {
       menu : createMenu(this, gameWidth, gameHeight),    
       loadingBar : createLoadingBar(this),
@@ -113,6 +118,10 @@ export default class ShapeSums {
   }
 
   undoAnswers(){
+    this.clickedUnits.clear()
+  }
+
+  refreshAnswers(){
     this.clickedUnits.clear()
   }
 
@@ -213,67 +222,11 @@ export default class ShapeSums {
     return correctSum == sum
   }
 
+  levelCompleted(){
+    return this.clickedUnits.size == 2;
+  }
+
   update(deltaTime) {
-
-    // this is were the transition between levels is handled
-    if (this.clickedUnits.size == 2 ) {
-      // this is where we should check if the sum is correct
-      if (this.gamestate === GAMESTATE.RUNNING) {
-        // this.updateGameState(GAMESTATE.LEVELDONE)
-        // this.clickedUnits.clear()
-          this.updateGameState(GAMESTATE.ASSESSINGLEVEL)
-
-          // this determines how long the crossmark or checkmark will remain in frame
-          this.counter = 50;
-          
-          if (this.correctAssessement()){
-            let checkmark = document.getElementById("screen-checkmark")
-            checkmark.style.display = 'block';
-            setTimeout(() => {
-              checkmark.style.zIndex = '2';
-              checkmark.classList.add("grow-checkmark");
-            }, 5);
-          } else{
-            let crossmark = document.getElementById("screen-crossmark")
-            crossmark.style.display = 'block';
-            setTimeout(() => {
-              crossmark.style.zIndex = '2';
-              crossmark.classList.add("grow-crossmark");
-            }, 5);
-            this.wrongAnswer = true;
-          }
-         
-      if (this.helperScreens.menu.soundOn){
-        setTimeout(() => {
-          var audio = new Audio('media/audio/frouts.wav');
-          audio.play(); 
-        }, 1000); 
-      }
-      
-
-      }
-    }
-
-    if (this.gamestate === GAMESTATE.ASSESSINGLEVEL) {
-
-      if (this.counter == 0){
-        this.updateGameState(GAMESTATE.LEVELDONE)
-        this.clickedUnits.clear()
-
-        // expicitly reset the checkmark or crossmark
-        if (this.wrongAnswer){
-          let crossmark = document.getElementById("screen-crossmark")
-          crossmark.style.display = 'none';
-          crossmark.classList.remove("grow-crossmark");
-        }else{
-          let checkmark = document.getElementById("screen-checkmark")
-          checkmark.style.display = 'none';
-          checkmark.classList.remove("grow-checkmark");
-        }       
-      }
-      this.counter -= 1;
-
-    }
 
     if (this.gamestate === GAMESTATE.LEVELDONE){
       this.dx = - 2 * this.rect.right / this.step;
