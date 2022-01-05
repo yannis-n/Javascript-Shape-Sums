@@ -16,14 +16,18 @@ export default class Menu {
 
       this.tutorial = document.createElement("div");
       this.tutorial.id = 'tutorial'
-      this.tutorialBackButton = document.createElement("div");
-      this.tutorialBackButton.id = 'tutorial-back'
-      this.tutorialBackButton.innerHTML = '<span> Back </span>'
-      this.tutorial.append(this.tutorialBackButton)
+      this.BackButton = document.createElement("div");
+      this.BackButton.id = 'tutorial-back'
+      this.BackButton.innerHTML = '<span> Back </span>'
+      this.tutorial.append(this.BackButton)
       this.tutorial.append(game.tutorial)
+
+      this.gameMask = document.createElement("div");
+      this.gameMask.id = 'game-mask'
 
       canvas.parentNode.insertBefore(this.gameMenu, canvas);
       canvas.parentNode.insertBefore(this.tutorial, canvas);
+      canvas.parentNode.insertBefore(this.gameMask, canvas);
 
       this.soundToggle = document.getElementById('soundToggle');
       this.fadedout = true;
@@ -35,6 +39,8 @@ export default class Menu {
       this.eventHandler()
 
     }
+
+    // MENULINKS is used to abstract away the different buttons used by assigning a number in data-menu-item
 
     createHTML() {
       return `
@@ -57,24 +63,33 @@ export default class Menu {
             this.fadedout = !this.fadedout;
           }.bind(this));
 
-          // this.gameMenu.querySelectorAll('a').addEventListener('click', function(event) {
-          //   console.log(this.fadedout)
-          // }.bind(this));
+
           let anchors = this.gameMenu.getElementsByTagName('a');
           for(let z = 0; z < anchors.length; z++) {
               let elem = anchors[z];   
               elem.onclick = function() {
                   let action = elem.getAttribute('data-menu-item');
                   if (MENULINKS.PLAY == action){
-                    console.log('this.game')
 
+                    // This handles the deference between unpausing and active game and starting a new one
                     if (this.game.GAMESTATE.PAUSED == this.game.gamestate){
+                      // in case the game has been paused, unpause it, then await 100 ms and start the game
+                      // this is to avoid clicking on a game tile while the game is loaded back on
                       this.unpause()
-
+                      this.game.updateGameState(this.game.GAMESTATE.REST)
+                      setTimeout(() => {
+                        this.game.updateGameState(this.game.GAMESTATE.RUNNING)
+                        this.game.helperScreens.menuBar.show()
+  
+                      }, 100);
                     }else{
+                      // in case the game is starting now start the countdown, then once it is finished, start the game
                       this.hide()
+                      this.game.updateGameState(this.game.GAMESTATE.STARTING)
+                      this.game.helperScreens.startingGameCountDown.start()
                     }
-                    this.game.updateGameState(this.game.GAMESTATE.RUNNING)
+                    
+                    // load the tutorial
                   }else if (MENULINKS.TUTORIAL == action){
                     this.gameMenu.style.opacity = 0;
                     this.show(this.tutorial)
@@ -82,7 +97,7 @@ export default class Menu {
 
               }.bind(this);
           }
-          this.tutorialBackButton.onclick = function() {
+          this.BackButton.onclick = function() {
             this.tutorial.style.opacity = 0;
             this.gameMenu.style.opacity = 1;
             this.tutorial.style.display = "none";
@@ -91,51 +106,35 @@ export default class Menu {
           this.soundToggle.onchange = function(){
             this.soundOn = this.soundToggle.checked
           }.bind(this);
-
-
-
     }
 
     show(element = this.gameMenu){
       element.style.display = "flex";
       setTimeout(() => {
         element.style.opacity = 1;
-
       }, 400);
-
     }
 
     hide(element = this.gameMenu){ 
       element.style.opacity = 0;
       element.style.display = "none";
-
     }
 
     pause(element = this.gameMenu){
-      console.log('pause')
-      console.log(element)
       if (element.id == 'game-menu'){
         element.querySelector('.play').innerHTML = 'Resume'
-        this.canvas.style.filter = 'brightness(0.5)'
+        this.gameMask.style.opacity = 1
       }
       element.style.display = "flex";
-      element.style.opacity = 1;
-      console.log(this.canvas)
-
-
+      setTimeout(() => {
+        element.style.opacity = 1;
+      }, 100);
     }
 
     unpause(element = this.gameMenu){
-      if (element.id == 'game-menu'){
-        this.canvas.style.filter = 'unset'
-
-      }
+      this.gameMask.style.opacity = 0
       element.style.display = "none";
       element.style.opacity = 0;
-
-
-
-    }
-  
+    } 
   }
   

@@ -1,6 +1,6 @@
 import InputHandler from "../src/input.js";
 import { drawBoard } from "./boardBuilder.js";
-import { updateGameStateForHelperScreens, createMenu, createLoadingBar, createMenuBar } from "../src/helperScreens/helperScreens.js";
+import { updateGameStateForHelperScreens, createMenu, createLoadingBar, createMenuBar, createStartingGameCountDown } from "../src/helperScreens/helperScreens.js";
 import { createHiDPICanvas, circleAndMouseCollissionDetection, shuffle, pointInsidePolygon  } from "../src/helper.js";
 
 
@@ -13,6 +13,8 @@ const GAMESTATE = {
   LEVELDONE: 5,
   LOADING: 6,
   ASSESSINGLEVEL: 7,
+  REST: 8,
+  STARTINGAME: 9
 };
 
 const unitMeasurement = {
@@ -105,12 +107,12 @@ export default class ShapeSums {
       menu : createMenu(this, gameWidth, gameHeight),    
       loadingBar : createLoadingBar(this),
       menuBar : createMenuBar(this),
+      startingGameCountDown: createStartingGameCountDown(this),
     }
 
   }
 
   undoAnswers(){
-    console.log('eee')
     this.clickedUnits.clear()
   }
 
@@ -205,7 +207,6 @@ export default class ShapeSums {
   // It will probably become more complicared in the future
   correctAssessement(){
     let sum =  Array.from(this.clickedUnits).reduce(function (sum, item) {
-      console.log(item)
       return item.dots + sum;
     }, 0);
     let correctSum = this.elements['centeredSum'].dots 
@@ -216,7 +217,7 @@ export default class ShapeSums {
 
     // this is were the transition between levels is handled
     if (this.clickedUnits.size == 2 ) {
-      // this is where we should check if the sum is correcct
+      // this is where we should check if the sum is correct
       if (this.gamestate === GAMESTATE.RUNNING) {
         // this.updateGameState(GAMESTATE.LEVELDONE)
         // this.clickedUnits.clear()
@@ -306,7 +307,7 @@ export default class ShapeSums {
   }
 
   draw(ctx) {
-    if (this.gamestate === GAMESTATE.RUNNING || this.gamestate === GAMESTATE.LEVELDONE || this.gamestate === GAMESTATE.NEWLEVEL || this.gamestate === GAMESTATE.ASSESSINGLEVEL) {
+    if (this.gamestate === GAMESTATE.RUNNING || this.gamestate === GAMESTATE.REST || this.gamestate === GAMESTATE.PAUSED || this.gamestate === GAMESTATE.LEVELDONE || this.gamestate === GAMESTATE.NEWLEVEL || this.gamestate === GAMESTATE.ASSESSINGLEVEL) {
       this.elements['centeredSum'].draw(ctx);
         [...this.elements['units']].forEach((object) => {
             object.draw(ctx)
@@ -344,7 +345,7 @@ export default class ShapeSums {
 
 
   togglePause() {
-    console.log('TEST')
+    console.log('togglePause')
     if (this.gamestate == GAMESTATE.PAUSED) {
       this.gamestate = GAMESTATE.RUNNING;
     } else {

@@ -91,9 +91,24 @@ body {
   background-color: #dcf1fa;
 }
 
+#game-mask {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  -ms-transition: opacity 1s;
+  /* IE 9 */
+  -webkit-transition: opacity 1s;
+  /* Chrome, Safari, Opera */
+  transition: opacity 1s;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 #game-menu, #tutorial {
   position: absolute;
-  z-index: 4;
+  z-index: 7;
   top: 50%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
@@ -105,11 +120,11 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  -ms-transition: opacity 1s;
+  -ms-transition: opacity 0.5s;
   /* IE 9 */
-  -webkit-transition: opacity 1s;
+  -webkit-transition: opacity 0.5s;
   /* Chrome, Safari, Opera */
-  transition: opacity 1s;
+  transition: opacity 0.5s;
   opacity: 0;
   display: none;
   width: 80%;
@@ -224,6 +239,26 @@ body {
 }
 #game-menu-bar #timer {
   color: #000;
+}
+
+#game-countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  /* IE 9 */
+  -webkit-transform: translate(-50%, -50%);
+  /* Chrome, Safari, Opera */
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  opacity: 0;
+  -ms-transition: all 0.5s;
+  /* IE 9 */
+  -webkit-transition: all 0.5s;
+  /* Chrome, Safari, Opera */
+  transition: all 0.5s;
+  font-size: 42;
+  text-transform: capitalize;
 }
 
 .crossmark {
