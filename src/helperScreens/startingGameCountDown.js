@@ -65,7 +65,7 @@ const script = [
 
         async function hide() { // 3
           gameCountDown.hide()
-          await timer(1000);
+          await timer(800);
         }
 
         async function countDownLoop() {
@@ -98,28 +98,6 @@ const script = [
           element.style.opacity = 0;
         }, 400);  
       }
-  
-    //   pause(element = this.gameMenu){
-    //     console.log('pause')
-    //     console.log(element)
-    //     if (element.id == 'game-menu'){
-    //       element.querySelector('.play').innerHTML = 'Resume'
-    //       this.canvas.style.filter = 'brightness(0.5)'
-    //     }
-    //     element.style.display = "flex";
-    //     element.style.opacity = 1;
-    //     console.log(this.canvas)
-    //   }
-  
-    //   unpause(element = this.gameMenu){
-    //     if (element.id == 'game-menu'){
-    //       this.canvas.style.filter = 'unset'
-  
-    //     }
-    //     element.style.display = "none";
-    //     element.style.opacity = 0;
-  
-    //   }
     
     }
     

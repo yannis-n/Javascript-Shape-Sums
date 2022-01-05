@@ -238,7 +238,7 @@ $menu-item-color: #000;
     @include translateMiddle;
     z-index: 5;
     opacity: 0;
-    @include transition(all 0.5s);
+    @include transition(all 0.2s);
     font-size: 42;
     text-transform: capitalize;
 }

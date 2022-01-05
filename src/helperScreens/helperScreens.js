@@ -20,29 +20,38 @@ export function createStartingGameCountDown(game){
 }
 
 export function updateGameStateForHelperScreens(game, GAMESTATE){
-  
-        // this is where it is assumed that the loading bar load immediately once the page loads
-        if (game.gamestate === GAMESTATE.LOADING){
-                // Once the bar is loaded hide and update gamestate
-                if (game.helperScreens.loadingBar.loaded()){
-                        game.helperScreens.loadingBar.hide()
-                        game.updateGameState(GAMESTATE.MENU)       
-                }
+        
+    if (game.gamestate === GAMESTATE.LOADING){
+
+        if (game.helperScreens.loadingBar.loaded()){
+          game.helperScreens.loadingBar.hide()
+        //       if (game.helperScreens.loadingBar.hidden()){
+                game.updateGameState(GAMESTATE.MENU)
+                
+        //       }     
+        }
+      }
+
+      if (game.gamestate === GAMESTATE.MENU) {
+        if (game.helperScreens.menu.hidden()){
+                game.helperScreens.menu.show()
+        }
+      }
+
+      if (game.gamestate === GAMESTATE.PAUSED) {
+        if (game.helperScreens.menu.hidden()){
+              game.helperScreens.menu.pause()
         }
 
-        // both of this check whether the game is paused or hasn't started yet. In both cases if the menu is hidden it should appear
-        if (game.gamestate === GAMESTATE.MENU) {
-                if (game.helperScreens.menu.hidden()){
-                        game.helperScreens.menu.show()
-                }
+        // if (!game.helperScreens.menuBar.hidden()){
+        //         game.helperScreens.menuBar.hide ()
+        //   }
+      }
+
+      if (game.gamestate === GAMESTATE.RUNNING) {
+        if (game.helperScreens.menuBar.hidden()){
+              game.helperScreens.menuBar.show()
         }
-
-        if (game.gamestate === GAMESTATE.PAUSED) {
-                if (game.helperScreens.menu.hidden()){
-                        game.helperScreens.menu.pause()
-                }
-        }
-
-
+      }
 }
 
