@@ -1,6 +1,6 @@
 import InputHandler from "../src/input.js";
 import { drawBoard } from "./boardBuilder.js";
-import { updateGameStateForHelperScreens, createMenu, createLoadingBar, createMenuBar, createStartingGameCountDown } from "../src/helperScreens/helperScreens.js";
+import { updateGameStateForHelperScreens, createAssessementSymbols, createMenu, createLoadingBar, createMenuBar, createStartingGameCountDown } from "../src/helperScreens/helperScreens.js";
 import { createHiDPICanvas, circleAndMouseCollissionDetection, shuffle, pointInsidePolygon  } from "../src/helper.js";
 
 
@@ -59,7 +59,6 @@ const shapeSums = [
 export default class ShapeSums {
   constructor(gameWidth, gameHeight, difficulty, canvas) {
     this.tutorial = 'This is a tutorial. For now you have to try playing';
-    this.counter = 0;
     this.GAMESTATE = GAMESTATE;
     this.canvas = canvas
     this.rect = canvas.getBoundingClientRect()
@@ -109,7 +108,8 @@ export default class ShapeSums {
 
     
     this.helperScreens = {
-      menu : createMenu(this, gameWidth, gameHeight),    
+      menu : createMenu(this, gameWidth, gameHeight),
+      assessementSymbols: createAssessementSymbols(this),    
       loadingBar : createLoadingBar(this),
       menuBar : createMenuBar(this),
       startingGameCountDown: createStartingGameCountDown(this),

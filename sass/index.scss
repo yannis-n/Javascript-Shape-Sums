@@ -49,6 +49,11 @@ body{
     justify-content: center;
 }
 
+#ThreedObjectsCanvas {
+    z-index: 2;
+    position: absolute;
+}
+
 #screen-container{
     position: relative;
     width: fit-content;
@@ -234,7 +239,6 @@ $menu-item-color: #000;
 
 
 #game-countdown{
-    pointer-events: none;
     position: absolute;
     @include translateMiddle;
     z-index: 5;

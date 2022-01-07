@@ -68,6 +68,11 @@ body {
   justify-content: center;
 }
 
+#ThreedObjectsCanvas {
+  z-index: 2;
+  position: absolute;
+}
+
 #screen-container {
   position: relative;
   width: fit-content;
@@ -252,11 +257,11 @@ body {
   transform: translate(-50%, -50%);
   z-index: 5;
   opacity: 0;
-  -ms-transition: all 0.5s;
+  -ms-transition: all 0.2s;
   /* IE 9 */
-  -webkit-transition: all 0.5s;
+  -webkit-transition: all 0.2s;
   /* Chrome, Safari, Opera */
-  transition: all 0.5s;
+  transition: all 0.2s;
   font-size: 42;
   text-transform: capitalize;
 }
